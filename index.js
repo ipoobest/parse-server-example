@@ -4,6 +4,7 @@
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
+const PostmarkAdapter = require("parse-server-postmark-adapter");
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
@@ -12,14 +13,57 @@ if (!databaseUri) {
 }
 
 var api = new ParseServer({
-  databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
-  cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
-  appId: process.env.APP_ID || 'myAppId',
-  masterKey: process.env.MASTER_KEY || '', //Add your master key here. Keep it secret!
-  serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
+  databaseURI: databaseUri || "mongodb://localhost:27017/dev",
+  cloud: process.env.CLOUD_CODE_MAIN || __dirname + "/cloud/main.js",
+  appId: process.env.APP_ID || "37151b935e618517d2467aaa4e10f8ed",
+  masterKey: process.env.MASTER_KEY || "905de41c9fb82aa9f8a964d8781b935c", //Add your master key here. Keep it secret!
+  serverURL: process.env.SERVER_URL || "http://localhost:1337/parse", // Don't forget to change to https if needed
   liveQuery: {
-    classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
-  }
+    classNames: ["Posts", "Comments"], // List of classes to support for query subscriptions
+  },
+  appName: "My First Server",
+  publicServerURL: "http://localhost:1337/parse",
+  verifyUserEmails: true,
+  emailAdapter: PostmarkAdapter({
+    apiKey: "b5cc1f42-ac04-4d61-a8ae-2d92aee7519b",
+    fromAddress: "info@dome.cloud",
+
+    // Verification email subject
+    verificationSubject: "Please verify your e-mail for *|appname|*",
+    // Verification email body. This will be ignored when verificationTemplateName is used.
+    verificationBody:
+      "Hi *|username|*,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*",
+    // Password reset email subject
+    passwordResetSubject: "Password Reset Request for *|appname|*",
+    // Password reset email body. This will be ignored when passwordResetTemplateName is used.
+    passwordResetBody:
+      "Hi *|username|*,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*",
+
+    /****************************************
+     * If you are using Postmark templates: *
+     ****************************************/
+
+    //
+    // If you want to use other custom User attributes in the emails
+    // (for example: firstName, lastName), add them to the list (username and email
+    // are pre-loaded).
+    // The merge tag in the template must be equal to the attribute's name.
+    customUserAttributesMergeTags: ["firstname", "lastname"],
+
+    //
+    // The name of your Postmark template for the password reset email:
+    // If you add this attribute, then passwordResetBody will be ignored.
+    // IMPORTANT: Make sure the email has the *|link|* merge tag,
+    //            it will render the url to reset the password.
+    passwordResetTemplateId: "password-reset-template-id",
+
+    //
+    // The name of your Postmark template for the verification email:
+    // If you add this attribute, then verificationBody will be ignored.
+    // IMPORTANT: Make sure the email has the *|link|* merge tag,
+    //            it will render the url to verify the user.
+    verificationTemplateId: "email-verification-template-id",
+  }), // Enable email verification
 });
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:

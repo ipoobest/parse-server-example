@@ -15,14 +15,14 @@ if (!databaseUri) {
 var api = new ParseServer({
   databaseURI: databaseUri || "mongodb://localhost:27017/dev",
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + "/cloud/main.js",
-  appId: process.env.APP_ID || "37151b935e618517d2467aaa4e10f8ed",
-  masterKey: process.env.MASTER_KEY || "905de41c9fb82aa9f8a964d8781b935c", //Add your master key here. Keep it secret!
-  serverURL: process.env.SERVER_URL || "https://esignatures.herokuapp.com/parse", // Don't forget to change to https if needed
+  appId: process.env.APP_ID || "416415eb0bd50de9ef3b409025ae95ce",
+  masterKey: process.env.MASTER_KEY || "8e8c61b94defd40e6ac1bc028d1323f9", //Add your master key here. Keep it secret!
+  serverURL: process.env.SERVER_URL || "https://e-signature.warp.click/parse", // Don't forget to change to https if needed
   liveQuery: {
     classNames: ["Posts", "Comments"], // List of classes to support for query subscriptions
   },
   appName: "My First Server",
-  publicServerURL: "https://esignatures.herokuapp.com/parse",
+  publicServerURL: "https://e-signature.warp.click/parse",
   verifyUserEmails: true,
   emailAdapter: PostmarkAdapter({
     apiKey: "b5cc1f42-ac04-4d61-a8ae-2d92aee7519b",
